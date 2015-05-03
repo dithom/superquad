@@ -55,7 +55,8 @@ void lcdSetBrightness(uint8_t);
 void lcdSetFont(Font);
 void lcdDrawPixel(uint8_t, uint8_t);
 void lcdDrawColumn(uint8_t, uint8_t);
-void lcdDrawChar(uint8_t);
+void lcdDrawChar(uint8_t, uint8_t, uint8_t);
+void lcdDrawString(uint8_t, uint8_t, const char*);
 
 
 #endif

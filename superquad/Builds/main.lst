@@ -1,0 +1,1737 @@
+   1               		.file	"main.cpp"
+   2               	__SP_H__ = 0x3e
+   3               	__SP_L__ = 0x3d
+   4               	__SREG__ = 0x3f
+   5               	__tmp_reg__ = 0
+   6               	__zero_reg__ = 1
+   8               		.text
+   9               	.Ltext0:
+ 115               	.global	_Z14lcdClearBufferv
+ 117               	_Z14lcdClearBufferv:
+ 119               	.Ltext1:
+   1:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** #include "include/st7565.h"
+   2:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** #include <string.h>
+   3:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+   4:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** //Display buffer with 1024 bytes (1 byte is one column in a page)
+   5:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** uint8_t buffer[bufferSize];
+   6:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+   7:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** //Holds current active font
+   8:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** Font activeFont;
+   9:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  10:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  11:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSendBuffer() {
+  12:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  13:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Iterate through pages
+  14:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (uint8_t page = 0; page < 8; ++page) {
+  15:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+  16:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(setPage | (7 - page));
+  17:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(setColumnLower | (0x0 & 0xF));
+  18:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(setColumnUpper | ((0x0 >> 4) & 0xF));
+  19:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(rmw);
+  20:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+  21:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         //Iterate through columns per page
+  22:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         for (uint8_t column = 0; column < 128; ++column) {
+  23:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****             
+  24:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****             lcdSendData(buffer[(128 * page) + column]);
+  25:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         }
+  26:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     }
+  27:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+  28:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  29:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  30:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdClearBuffer() {
+ 121               	.LM0:
+ 122               	.LFBB1:
+ 123               	/* prologue: function */
+ 124               	/* frame size = 0 */
+ 125               	/* stack size = 0 */
+ 126               	.L__stack_usage = 0
+  31:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  32:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     memset(buffer, 0, bufferSize);
+ 128               	.LM1:
+ 129 0000 80E0      		ldi r24,0
+ 130 0002 94E0      		ldi r25,lo8(4)
+ 131 0004 E0E0      		ldi r30,lo8(buffer)
+ 132 0006 F0E0      		ldi r31,hi8(buffer)
+ 133 0008 DF01      		movw r26,r30
+ 134 000a 9C01      		movw r18,r24
+ 135               		0:
+ 136 000c 1D92      		st X+,__zero_reg__
+ 137 000e 2150      		subi r18,1
+ 138 0010 3040      		sbci r19,0
+ 139 0012 01F4      		brne 0b
+ 140 0014 0895      		ret
+ 142               	.Lscope1:
+ 144               	.global	_Z16lcdHardwareResetv
+ 146               	_Z16lcdHardwareResetv:
+  33:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+  34:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  35:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  36:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdRefresh() {
+  37:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+  39:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+  40:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  41:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  42:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdHardwareReset() {
+ 148               	.LM2:
+ 149               	.LFBB2:
+ 150               	/* prologue: function */
+ 151               	/* frame size = 0 */
+ 152               	/* stack size = 0 */
+ 153               	.L__stack_usage = 0
+  43:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  44:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Hardware reset
+  45:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_cs = 0;
+ 155               	.LM3:
+ 156 0016 5D98      		cbi 0xb,5
+  46:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_rst = 0;
+ 158               	.LM4:
+ 159 0018 5E98      		cbi 0xb,6
+ 160               	.LBB36:
+ 161               	.LBB37:
+ 163               	.Ltext2:
+   1:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* Copyright (c) 2002, Marek Michalkiewicz
+   2:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2004,2005,2007 Joerg Wunsch
+   3:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Copyright (c) 2007  Florin-Viorel Petrov
+   4:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    All rights reserved.
+   5:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+   6:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Redistribution and use in source and binary forms, with or without
+   7:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    modification, are permitted provided that the following conditions are met:
+   8:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+   9:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    * Redistributions of source code must retain the above copyright
+  10:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer.
+  11:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  12:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    * Redistributions in binary form must reproduce the above copyright
+  13:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      notice, this list of conditions and the following disclaimer in
+  14:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      the documentation and/or other materials provided with the
+  15:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      distribution.
+  16:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  17:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    * Neither the name of the copyright holders nor the names of
+  18:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      contributors may be used to endorse or promote products derived
+  19:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****      from this software without specific prior written permission.
+  20:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  21:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+  22:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+  23:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+  24:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR CONTRIBUTORS BE
+  25:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+  26:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+  27:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+  28:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+  29:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+  30:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+  31:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   POSSIBILITY OF SUCH DAMAGE. */
+  32:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  33:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* $Id$ */
+  34:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  35:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef _UTIL_DELAY_H_
+  36:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #define _UTIL_DELAY_H_ 1
+  37:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  38:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef __HAS_DELAY_CYCLES
+  39:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #define __HAS_DELAY_CYCLES 1
+  40:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  41:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  42:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #include <inttypes.h>
+  43:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #include <util/delay_basic.h>
+  44:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #include <math.h>
+  45:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  46:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /** \file */
+  47:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /** \defgroup util_delay <util/delay.h>: Convenience functions for busy-wait delay loops
+  48:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \code
+  49:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     #define F_CPU 1000000UL  // 1 MHz
+  50:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     //#define F_CPU 14.7456E6
+  51:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     #include <util/delay.h>
+  52:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \endcode
+  53:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  54:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \note As an alternative method, it is possible to pass the
+  55:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     F_CPU macro down to the compiler from the Makefile.
+  56:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     Obviously, in that case, no \c \#define statement should be
+  57:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     used.
+  58:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  59:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     The functions in this header file are wrappers around the basic
+  60:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     busy-wait functions from <util/delay_basic.h>.  They are meant as
+  61:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     convenience functions where actual time values can be specified
+  62:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     rather than a number of cycles to wait for.  The idea behind is
+  63:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     that compile-time constant expressions will be eliminated by
+  64:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     compiler optimization so floating-point expressions can be used
+  65:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     to calculate the number of delay cycles needed based on the CPU
+  66:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     frequency passed by the macro F_CPU.
+  67:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  68:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     \note In order for these functions to work as intended, compiler
+  69:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     optimizations <em>must</em> be enabled, and the delay time
+  70:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     <em>must</em> be an expression that is a known constant at
+  71:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     compile-time.  If these requirements are not met, the resulting
+  72:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     delay will be much longer (and basically unpredictable), and
+  73:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     applications that otherwise do not use floating-point calculations
+  74:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     will experience severe code bloat by the floating-point library
+  75:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     routines linked into the application.
+  76:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  77:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     The functions available allow the specification of microsecond, and
+  78:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     millisecond delays directly, using the application-supplied macro
+  79:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     F_CPU as the CPU clock frequency (in Hertz).
+  80:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  81:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** */
+  82:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  83:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #if !defined(__DOXYGEN__)
+  84:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** static inline void _delay_us(double __us) __attribute__((always_inline));
+  85:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** static inline void _delay_ms(double __ms) __attribute__((always_inline));
+  86:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  87:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  88:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef F_CPU
+  89:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /* prevent compiler error by supplying a default */
+  90:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** # warning "F_CPU not defined for <util/delay.h>"
+  91:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** # define F_CPU 1000000UL
+  92:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  93:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  94:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #ifndef __OPTIMIZE__
+  95:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** # warning "Compiler optimizations disabled; functions from <util/delay.h> won't work as designed"
+  96:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+  97:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+  98:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+  99:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 100:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 101:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #  include <math.h>
+ 102:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #endif
+ 103:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 104:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** /**
+ 105:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    \ingroup util_delay
+ 106:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 107:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Perform a delay of \c __ms milliseconds, using _delay_loop_2().
+ 108:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 109:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    The macro F_CPU is supposed to be defined to a
+ 110:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    constant defining the CPU clock frequency (in Hertz).
+ 111:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 112:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    The maximal possible delay is 262.14 ms / F_CPU in MHz.
+ 113:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 114:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    When the user request delay which exceed the maximum possible one,
+ 115:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    _delay_ms() provides a decreased resolution functionality. In this
+ 116:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    mode _delay_ms() will work with a resolution of 1/10 ms, providing
+ 117:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    delays up to 6.5535 seconds (independent from CPU frequency).  The
+ 118:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    user will not be informed about decreased resolution.
+ 119:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 120:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    If the avr-gcc toolchain has __builtin_avr_delay_cycles(unsigned long)
+ 121:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    support, maximal possible delay is 4294967.295 ms/ F_CPU in MHz. For
+ 122:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    values greater than the maximal possible delay, overflows results in
+ 123:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    no delay i.e., 0ms.
+ 124:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 125:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Conversion of __us into clock cycles may not always result in integer.
+ 126:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    By default, the clock cycles rounded up to next integer. This ensures that
+ 127:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    the user gets atleast __us microseconds of delay.
+ 128:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 129:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Alternatively, user can define __DELAY_ROUND_DOWN__ and __DELAY_ROUND_CLOSEST__
+ 130:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    to round down and round to closest integer.
+ 131:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 132:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Note: The new implementation of _delay_ms(double __ms) with 
+ 133:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****     __builtin_avr_delay_cycles(unsigned long) support is not backward compatible. 
+ 134:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    User can define __DELAY_BACKWARD_COMPATIBLE__ to get a backward compatible delay.
+ 135:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    Also, the backward compatible
+ 136:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    algorithm will be chosen if the code is compiled in a <em>freestanding
+ 137:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    environment</em> (GCC option \c -ffreestanding), as the math functions
+ 138:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****    required for rounding are not available to the compiler then.
+ 139:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 140:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****  */
+ 141:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** void
+ 142:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** _delay_ms(double __ms)
+ 143:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** {
+ 144:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	double __tmp ; 
+ 145:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** #if __HAS_DELAY_CYCLES && defined(__OPTIMIZE__) && \
+ 146:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   !defined(__DELAY_BACKWARD_COMPATIBLE__) &&	   \
+ 147:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h ****   __STDC_HOSTED__
+ 148:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	uint32_t __ticks_dc;
+ 149:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	extern void __builtin_avr_delay_cycles(unsigned long);
+ 150:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	__tmp = ((F_CPU) / 1e3) * __ms;
+ 151:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 152:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#if defined(__DELAY_ROUND_DOWN__)
+ 153:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)fabs(__tmp);
+ 154:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 155:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#elif defined(__DELAY_ROUND_CLOSEST__)
+ 156:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(fabs(__tmp)+0.5);
+ 157:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 158:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#else
+ 159:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		//round up by default
+ 160:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 		__ticks_dc = (uint32_t)(ceil(fabs(__tmp)));
+ 161:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	#endif
+ 162:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 
+ 163:/usr/local/CrossPack-AVR-20131216/avr/include/util/delay.h **** 	__builtin_avr_delay_cycles(__ticks_dc);
+ 165               	.LM5:
+ 166 001a 2FE7      		ldi r18,lo8(1999999)
+ 167 001c 84E8      		ldi r24,hi8(1999999)
+ 168 001e 9EE1      		ldi r25,hlo8(1999999)
+ 169 0020 2150      		1: subi r18,1
+ 170 0022 8040      		sbci r24,0
+ 171 0024 9040      		sbci r25,0
+ 172 0026 01F4      		brne 1b
+ 173 0028 00C0      		rjmp .
+ 174 002a 0000      		nop
+ 175               	.LBE37:
+ 176               	.LBE36:
+ 178               	.Ltext3:
+  47:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     _delay_ms(500);
+  48:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_rst = 1;
+ 180               	.LM6:
+ 181 002c 5E9A      		sbi 0xb,6
+ 182 002e 0895      		ret
+ 184               	.Lscope2:
+ 187               	.global	_Z11lcdSendByteh
+ 189               	_Z11lcdSendByteh:
+  49:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+  50:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  51:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  52:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSendByte(uint8_t byte) {
+ 191               	.LM7:
+ 192               	.LFBB3:
+ 193               	/* prologue: function */
+ 194               	/* frame size = 0 */
+ 195               	/* stack size = 0 */
+ 196               	.L__stack_usage = 0
+ 197               	.LBB38:
+  53:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  54:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Make sure clock starts high
+  55:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_scl = 1;
+ 199               	.LM8:
+ 200 0030 5C9A      		sbi 0xb,4
+ 201 0032 27E0      		ldi r18,lo8(7)
+ 202 0034 30E0      		ldi r19,0
+ 203               	.LBB39:
+  56:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  57:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Send byte from MSB to LSB
+  58:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (int8_t i = 7; i >= 0; --i) {
+  59:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+  60:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         st7565_scl = 0;
+  61:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         st7565_sda = (byte & (1 << i) ? 1 : 0); //noch nicht gecheckt...
+ 205               	.LM9:
+ 206 0036 90E0      		ldi r25,0
+ 207               	.L5:
+  60:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         st7565_scl = 0;
+ 209               	.LM10:
+ 210 0038 5C98      		cbi 0xb,4
+ 212               	.LM11:
+ 213 003a AC01      		movw r20,r24
+ 214 003c 022E      		mov r0,r18
+ 215 003e 00C0      		rjmp 2f
+ 216               		1:
+ 217 0040 5595      		asr r21
+ 218 0042 4795      		ror r20
+ 219               		2:
+ 220 0044 0A94      		dec r0
+ 221 0046 02F4      		brpl 1b
+ 222 0048 40FD      		sbrc r20,0
+ 223 004a 599A      		sbi 0xb,1
+ 224 004c 40FF      		sbrs r20,0
+ 225 004e 5998      		cbi 0xb,1
+  62:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         st7565_scl = 1;
+ 227               	.LM12:
+ 228 0050 5C9A      		sbi 0xb,4
+ 229 0052 2150      		subi r18,1
+ 230 0054 3109      		sbc r19,__zero_reg__
+ 231 0056 00F4      		brcc .L5
+ 232               	/* epilogue start */
+ 233               	.LBE39:
+ 234               	.LBE38:
+  63:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     }
+  64:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 236               	.LM13:
+ 237 0058 0895      		ret
+ 239               	.Lscope3:
+ 242               	.global	_Z14lcdSendCommandh
+ 244               	_Z14lcdSendCommandh:
+  65:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  66:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  67:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSendCommand(uint8_t command) {
+ 246               	.LM14:
+ 247               	.LFBB4:
+ 248               	/* prologue: function */
+ 249               	/* frame size = 0 */
+ 250               	/* stack size = 0 */
+ 251               	.L__stack_usage = 0
+  68:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  69:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Set lcd to command mode
+  70:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_a0 = 0;
+ 253               	.LM15:
+ 254 005a 5F98      		cbi 0xb,7
+  71:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  72:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendByte(command);
+ 256               	.LM16:
+ 257 005c 0C94 0000 		jmp _Z11lcdSendByteh
+ 259               	.Lscope4:
+ 262               	.global	_Z11lcdSendDatah
+ 264               	_Z11lcdSendDatah:
+  73:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+  74:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  75:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  76:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSendData(uint8_t data) {
+ 266               	.LM17:
+ 267               	.LFBB5:
+ 268               	/* prologue: function */
+ 269               	/* frame size = 0 */
+ 270               	/* stack size = 0 */
+ 271               	.L__stack_usage = 0
+  77:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  78:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Set lcd to data mode
+  79:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_a0 = 1;
+ 273               	.LM18:
+ 274 0060 5F9A      		sbi 0xb,7
+  80:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  81:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendByte(data);
+ 276               	.LM19:
+ 277 0062 0C94 0000 		jmp _Z11lcdSendByteh
+ 279               	.Lscope5:
+ 281               	.global	_Z13lcdSendBufferv
+ 283               	_Z13lcdSendBufferv:
+  11:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSendBuffer() {
+ 285               	.LM20:
+ 286               	.LFBB6:
+ 287 0066 FF92      		push r15
+ 288 0068 0F93      		push r16
+ 289 006a 1F93      		push r17
+ 290 006c CF93      		push r28
+ 291 006e DF93      		push r29
+ 292               	/* prologue: function */
+ 293               	/* frame size = 0 */
+ 294               	/* stack size = 5 */
+ 295               	.L__stack_usage = 5
+ 296 0070 00E0      		ldi r16,lo8(buffer)
+ 297 0072 10E0      		ldi r17,hi8(buffer)
+  11:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSendBuffer() {
+ 299               	.LM21:
+ 300 0074 87E0      		ldi r24,lo8(7)
+ 301 0076 F82E      		mov r15,r24
+ 302               	.L13:
+ 303               	.LBB40:
+ 304               	.LBB41:
+  16:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(setPage | (7 - page));
+ 306               	.LM22:
+ 307 0078 8F2D      		mov r24,r15
+ 308 007a 806B      		ori r24,lo8(-80)
+ 309 007c 0E94 0000 		call _Z14lcdSendCommandh
+  17:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(setColumnLower | (0x0 & 0xF));
+ 311               	.LM23:
+ 312 0080 80E0      		ldi r24,0
+ 313 0082 0E94 0000 		call _Z14lcdSendCommandh
+  18:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(setColumnUpper | ((0x0 >> 4) & 0xF));
+ 315               	.LM24:
+ 316 0086 80E1      		ldi r24,lo8(16)
+ 317 0088 0E94 0000 		call _Z14lcdSendCommandh
+  19:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdSendCommand(rmw);
+ 319               	.LM25:
+ 320 008c 80EE      		ldi r24,lo8(-32)
+ 321 008e 0E94 0000 		call _Z14lcdSendCommandh
+ 322 0092 C0E0      		ldi r28,0
+ 323 0094 D0E0      		ldi r29,0
+ 324               	.L10:
+ 325 0096 F801      		movw r30,r16
+ 326 0098 EC0F      		add r30,r28
+ 327 009a FD1F      		adc r31,r29
+ 328               	.LBB42:
+  24:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****             lcdSendData(buffer[(128 * page) + column]);
+ 330               	.LM26:
+ 331 009c 8081      		ld r24,Z
+ 332 009e 0E94 0000 		call _Z11lcdSendDatah
+ 333 00a2 2196      		adiw r28,1
+  22:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         for (uint8_t column = 0; column < 128; ++column) {
+ 335               	.LM27:
+ 336 00a4 C038      		cpi r28,-128
+ 337 00a6 D105      		cpc r29,__zero_reg__
+ 338 00a8 01F4      		brne .L10
+ 339 00aa FA94      		dec r15
+ 340 00ac 0058      		subi r16,-128
+ 341 00ae 1F4F      		sbci r17,-1
+ 342               	.LBE42:
+ 343               	.LBE41:
+  14:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (uint8_t page = 0; page < 8; ++page) {
+ 345               	.LM28:
+ 346 00b0 8FEF      		ldi r24,lo8(-1)
+ 347 00b2 F812      		cpse r15,r24
+ 348 00b4 00C0      		rjmp .L13
+ 349               	/* epilogue start */
+ 350               	.LBE40:
+  27:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 352               	.LM29:
+ 353 00b6 DF91      		pop r29
+ 354 00b8 CF91      		pop r28
+ 355 00ba 1F91      		pop r17
+ 356 00bc 0F91      		pop r16
+ 357 00be FF90      		pop r15
+ 358 00c0 0895      		ret
+ 360               	.Lscope6:
+ 362               	.global	_Z10lcdRefreshv
+ 364               	_Z10lcdRefreshv:
+  36:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdRefresh() {
+ 366               	.LM30:
+ 367               	.LFBB7:
+ 368               	/* prologue: function */
+ 369               	/* frame size = 0 */
+ 370               	/* stack size = 0 */
+ 371               	.L__stack_usage = 0
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+ 373               	.LM31:
+ 374 00c2 0C94 0000 		jmp _Z13lcdSendBufferv
+ 376               	.Lscope7:
+ 378               	.global	_Z7lcdInitv
+ 380               	_Z7lcdInitv:
+  82:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+  83:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  84:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+  85:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdInit() {
+ 382               	.LM32:
+ 383               	.LFBB8:
+ 384               	/* prologue: function */
+ 385               	/* frame size = 0 */
+ 386               	/* stack size = 0 */
+ 387               	.L__stack_usage = 0
+  86:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  87:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Set lcd pins as outputs
+  88:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_cs_ddr = output;
+ 389               	.LM33:
+ 390 00c6 559A      		sbi 0xa,5
+  89:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_rst_ddr = output;
+ 392               	.LM34:
+ 393 00c8 569A      		sbi 0xa,6
+  90:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_a0_ddr = output;
+ 395               	.LM35:
+ 396 00ca 579A      		sbi 0xa,7
+  91:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_scl_ddr = output;
+ 398               	.LM36:
+ 399 00cc 549A      		sbi 0xa,4
+  92:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_sda_ddr = output;
+ 401               	.LM37:
+ 402 00ce 519A      		sbi 0xa,1
+  93:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+  94:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_cs = 1;
+ 404               	.LM38:
+ 405 00d0 5D9A      		sbi 0xb,5
+  95:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_rst = 1;
+ 407               	.LM39:
+ 408 00d2 5E9A      		sbi 0xb,6
+  96:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_a0 = 1;
+ 410               	.LM40:
+ 411 00d4 5F9A      		sbi 0xb,7
+  97:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_scl = 1;
+ 413               	.LM41:
+ 414 00d6 5C9A      		sbi 0xb,4
+  98:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     st7565_sda = 1;
+ 416               	.LM42:
+ 417 00d8 599A      		sbi 0xb,1
+  99:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 100:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Reset lcd
+ 101:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdHardwareReset();
+ 419               	.LM43:
+ 420 00da 0E94 0000 		call _Z16lcdHardwareResetv
+ 102:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 103:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Configure lcd
+ 104:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setBias9);
+ 422               	.LM44:
+ 423 00de 82EA      		ldi r24,lo8(-94)
+ 424 00e0 0E94 0000 		call _Z14lcdSendCommandh
+ 105:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setAdcNormal);
+ 426               	.LM45:
+ 427 00e4 80EA      		ldi r24,lo8(-96)
+ 428 00e6 0E94 0000 		call _Z14lcdSendCommandh
+ 106:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setComNormal);
+ 430               	.LM46:
+ 431 00ea 80EC      		ldi r24,lo8(-64)
+ 432 00ec 0E94 0000 		call _Z14lcdSendCommandh
+ 107:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setDispStartLine);
+ 434               	.LM47:
+ 435 00f0 80E4      		ldi r24,lo8(64)
+ 436 00f2 0E94 0000 		call _Z14lcdSendCommandh
+ 108:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setPowerControl | 0x04);
+ 438               	.LM48:
+ 439 00f6 8CE2      		ldi r24,lo8(44)
+ 440 00f8 0E94 0000 		call _Z14lcdSendCommandh
+ 441               	.LBB43:
+ 442               	.LBB44:
+ 444               	.Ltext4:
+ 446               	.LM49:
+ 447 00fc 2FE3      		ldi r18,lo8(199999)
+ 448 00fe 8DE0      		ldi r24,hi8(199999)
+ 449 0100 93E0      		ldi r25,hlo8(199999)
+ 450 0102 2150      		1: subi r18,1
+ 451 0104 8040      		sbci r24,0
+ 452 0106 9040      		sbci r25,0
+ 453 0108 01F4      		brne 1b
+ 454 010a 00C0      		rjmp .
+ 455 010c 0000      		nop
+ 456               	.LBE44:
+ 457               	.LBE43:
+ 459               	.Ltext5:
+ 109:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     _delay_ms(50);
+ 110:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setPowerControl | 0x06);
+ 461               	.LM50:
+ 462 010e 8EE2      		ldi r24,lo8(46)
+ 463 0110 0E94 0000 		call _Z14lcdSendCommandh
+ 464               	.LBB45:
+ 465               	.LBB46:
+ 467               	.Ltext6:
+ 469               	.LM51:
+ 470 0114 2FE3      		ldi r18,lo8(199999)
+ 471 0116 8DE0      		ldi r24,hi8(199999)
+ 472 0118 93E0      		ldi r25,hlo8(199999)
+ 473 011a 2150      		1: subi r18,1
+ 474 011c 8040      		sbci r24,0
+ 475 011e 9040      		sbci r25,0
+ 476 0120 01F4      		brne 1b
+ 477 0122 00C0      		rjmp .
+ 478 0124 0000      		nop
+ 479               	.LBE46:
+ 480               	.LBE45:
+ 482               	.Ltext7:
+ 111:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     _delay_ms(50);
+ 112:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setPowerControl | 0x07);
+ 484               	.LM52:
+ 485 0126 8FE2      		ldi r24,lo8(47)
+ 486 0128 0E94 0000 		call _Z14lcdSendCommandh
+ 487               	.LBB47:
+ 488               	.LBB48:
+ 490               	.Ltext8:
+ 492               	.LM53:
+ 493 012c 8FE4      		ldi r24,lo8(-15537)
+ 494 012e 93EC      		ldi r25,hi8(-15537)
+ 495 0130 0197      		1: sbiw r24,1
+ 496 0132 01F4      		brne 1b
+ 497 0134 00C0      		rjmp .
+ 498 0136 0000      		nop
+ 499               	.LBE48:
+ 500               	.LBE47:
+ 502               	.Ltext9:
+ 113:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     _delay_ms(10);
+ 114:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setResistorRatio | 0x6);
+ 504               	.LM54:
+ 505 0138 86E2      		ldi r24,lo8(38)
+ 506 013a 0E94 0000 		call _Z14lcdSendCommandh
+ 115:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 116:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Turn on lcd
+ 117:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(displayOn);
+ 508               	.LM55:
+ 509 013e 8FEA      		ldi r24,lo8(-81)
+ 510 0140 0E94 0000 		call _Z14lcdSendCommandh
+ 118:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setAllPtsNormal);
+ 512               	.LM56:
+ 513 0144 84EA      		ldi r24,lo8(-92)
+ 514 0146 0C94 0000 		jmp _Z14lcdSendCommandh
+ 516               	.Lscope8:
+ 519               	.global	_Z16lcdSetBrightnessh
+ 521               	_Z16lcdSetBrightnessh:
+ 119:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 120:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 121:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 122:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSetBrightness(uint8_t value) {
+ 523               	.LM57:
+ 524               	.LFBB9:
+ 525 014a CF93      		push r28
+ 526               	/* prologue: function */
+ 527               	/* frame size = 0 */
+ 528               	/* stack size = 1 */
+ 529               	.L__stack_usage = 1
+ 530 014c C82F      		mov r28,r24
+ 123:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 124:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setVolumeFirst);
+ 532               	.LM58:
+ 533 014e 81E8      		ldi r24,lo8(-127)
+ 534 0150 0E94 0000 		call _Z14lcdSendCommandh
+ 125:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setVolumeSecond | (value & 0x3f));
+ 536               	.LM59:
+ 537 0154 8C2F      		mov r24,r28
+ 538 0156 8F73      		andi r24,lo8(63)
+ 539               	/* epilogue start */
+ 126:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 541               	.LM60:
+ 542 0158 CF91      		pop r28
+ 125:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendCommand(setVolumeSecond | (value & 0x3f));
+ 544               	.LM61:
+ 545 015a 0C94 0000 		jmp _Z14lcdSendCommandh
+ 547               	.Lscope9:
+ 550               	.global	_Z10lcdSetFont4Font
+ 552               	_Z10lcdSetFont4Font:
+ 127:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 128:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 129:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdSetFont(Font font) {
+ 554               	.LM62:
+ 555               	.LFBB10:
+ 556               	/* prologue: function */
+ 557               	/* frame size = 0 */
+ 558               	/* stack size = 0 */
+ 559               	.L__stack_usage = 0
+ 130:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 131:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     activeFont = font;
+ 561               	.LM63:
+ 562 015e 6093 0000 		sts activeFont,r22
+ 563 0162 7093 0000 		sts activeFont+1,r23
+ 564 0166 8093 0000 		sts activeFont+2,r24
+ 565 016a 9093 0000 		sts activeFont+3,r25
+ 566 016e 0895      		ret
+ 568               	.Lscope10:
+ 572               	.global	_Z12lcdDrawPixelhh
+ 574               	_Z12lcdDrawPixelhh:
+ 132:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 133:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 134:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 135:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdDrawPixel(uint8_t x, uint8_t y) {
+ 576               	.LM64:
+ 577               	.LFBB11:
+ 578               	/* prologue: function */
+ 579               	/* frame size = 0 */
+ 580               	/* stack size = 0 */
+ 581               	.L__stack_usage = 0
+ 136:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 137:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     if (x >= 128 || y >= 64) {
+ 583               	.LM65:
+ 584 0170 87FD      		sbrc r24,7
+ 585 0172 00C0      		rjmp .L18
+ 587               	.LM66:
+ 588 0174 6034      		cpi r22,lo8(64)
+ 589 0176 00F4      		brsh .L18
+ 138:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+ 139:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         return;
+ 140:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     } else {
+ 141:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+ 142:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         buffer[x + (y / 8) * 128] = (1 << (7 - (y % 8))); //noch nicht gecheckt...
+ 591               	.LM67:
+ 592 0178 962F      		mov r25,r22
+ 593 017a 9695      		lsr r25
+ 594 017c 9695      		lsr r25
+ 595 017e 9695      		lsr r25
+ 596 0180 E82F      		mov r30,r24
+ 597 0182 F0E0      		ldi r31,0
+ 598 0184 E050      		subi r30,lo8(-(buffer))
+ 599 0186 F040      		sbci r31,hi8(-(buffer))
+ 600 0188 80E8      		ldi r24,lo8(-128)
+ 601 018a 989F      		mul r25,r24
+ 602 018c E00D      		add r30,r0
+ 603 018e F11D      		adc r31,r1
+ 604 0190 1124      		clr __zero_reg__
+ 605 0192 70E0      		ldi r23,0
+ 606 0194 6095      		com r22
+ 607 0196 7095      		com r23
+ 608 0198 6770      		andi r22,7
+ 609 019a 7727      		clr r23
+ 610 019c 81E0      		ldi r24,lo8(1)
+ 611 019e 00C0      		rjmp 2f
+ 612               		1:
+ 613 01a0 880F      		lsl r24
+ 614               		2:
+ 615 01a2 6A95      		dec r22
+ 616 01a4 02F4      		brpl 1b
+ 617 01a6 8083      		st Z,r24
+ 618               	.L18:
+ 619 01a8 0895      		ret
+ 621               	.Lscope11:
+ 625               	.global	_Z13lcdDrawColumnhh
+ 627               	_Z13lcdDrawColumnhh:
+ 143:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     }
+ 144:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 145:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 146:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 147:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdDrawColumn(uint8_t page, uint8_t column) {
+ 629               	.LM68:
+ 630               	.LFBB12:
+ 631               	/* prologue: function */
+ 632               	/* frame size = 0 */
+ 633               	/* stack size = 0 */
+ 634               	.L__stack_usage = 0
+ 148:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 149:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     if (page >= 8 || column >= 128) {
+ 636               	.LM69:
+ 637 01aa 8830      		cpi r24,lo8(8)
+ 638 01ac 00F4      		brsh .L20
+ 640               	.LM70:
+ 641 01ae 67FD      		sbrc r22,7
+ 642 01b0 00C0      		rjmp .L20
+ 150:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+ 151:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         return;
+ 152:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     } else {
+ 153:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+ 154:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         buffer[page * 128 + column] = 0xFF; //wenn probleme vll |=
+ 644               	.LM71:
+ 645 01b2 90E8      		ldi r25,lo8(-128)
+ 646 01b4 899F      		mul r24,r25
+ 647 01b6 F001      		movw r30,r0
+ 648 01b8 1124      		clr __zero_reg__
+ 649 01ba E050      		subi r30,lo8(-(buffer))
+ 650 01bc F040      		sbci r31,hi8(-(buffer))
+ 651 01be E60F      		add r30,r22
+ 652 01c0 F11D      		adc r31,__zero_reg__
+ 653 01c2 8FEF      		ldi r24,lo8(-1)
+ 654 01c4 8083      		st Z,r24
+ 655               	.L20:
+ 656 01c6 0895      		ret
+ 658               	.Lscope12:
+ 663               	.global	_Z11lcdDrawCharhhh
+ 665               	_Z11lcdDrawCharhhh:
+ 155:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     }
+ 156:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 157:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 158:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 159:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdDrawChar(uint8_t x, uint8_t y, uint8_t character) {
+ 667               	.LM72:
+ 668               	.LFBB13:
+ 669               	/* prologue: function */
+ 670               	/* frame size = 0 */
+ 671               	/* stack size = 0 */
+ 672               	.L__stack_usage = 0
+ 673               	.LBB49:
+ 160:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 161:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Offset from ASCI table to byte array
+ 162:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     uint16_t startPos = (character - 32) * activeFont.width;
+ 675               	.LM73:
+ 676 01c8 7091 0000 		lds r23,activeFont
+ 677 01cc 50E0      		ldi r21,0
+ 678 01ce 4052      		subi r20,32
+ 679 01d0 5109      		sbc r21,__zero_reg__
+ 680 01d2 749F      		mul r23,r20
+ 681 01d4 F001      		movw r30,r0
+ 682 01d6 759F      		mul r23,r21
+ 683 01d8 F00D      		add r31,r0
+ 684 01da 1124      		clr __zero_reg__
+ 685               	.LBB50:
+ 163:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 164:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     //Write character to buffer
+ 165:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (uint8_t i = 0; i < activeFont.width; ++i) {
+ 166:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+ 167:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         buffer[i + x + (y / 8) * 128] = activeFont.fontTable[startPos + i];
+ 687               	.LM74:
+ 688 01dc 6695      		lsr r22
+ 689 01de 6695      		lsr r22
+ 690 01e0 6695      		lsr r22
+ 691 01e2 4091 0000 		lds r20,activeFont+2
+ 692 01e6 5091 0000 		lds r21,activeFont+2+1
+ 165:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (uint8_t i = 0; i < activeFont.width; ++i) {
+ 694               	.LM75:
+ 695 01ea 20E0      		ldi r18,0
+ 696 01ec 30E0      		ldi r19,0
+ 697 01ee 4E0F      		add r20,r30
+ 698 01f0 5F1F      		adc r21,r31
+ 699 01f2 90E0      		ldi r25,0
+ 700 01f4 E0E8      		ldi r30,lo8(-128)
+ 701 01f6 6E9F      		mul r22,r30
+ 702 01f8 800D      		add r24,r0
+ 703 01fa 911D      		adc r25,r1
+ 704 01fc 1124      		clr __zero_reg__
+ 705 01fe 8050      		subi r24,lo8(-(buffer))
+ 706 0200 9040      		sbci r25,hi8(-(buffer))
+ 707               	.L23:
+ 165:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (uint8_t i = 0; i < activeFont.width; ++i) {
+ 709               	.LM76:
+ 710 0202 2717      		cp r18,r23
+ 711 0204 00F4      		brsh .L25
+ 712 0206 FA01      		movw r30,r20
+ 713 0208 E20F      		add r30,r18
+ 714 020a F31F      		adc r31,r19
+ 716               	.LM77:
+ 717 020c 6081      		ld r22,Z
+ 718 020e FC01      		movw r30,r24
+ 719 0210 E20F      		add r30,r18
+ 720 0212 F31F      		adc r31,r19
+ 721 0214 6083      		st Z,r22
+ 722 0216 2F5F      		subi r18,-1
+ 723 0218 3F4F      		sbci r19,-1
+ 724 021a 00C0      		rjmp .L23
+ 725               	.L25:
+ 726               	/* epilogue start */
+ 727               	.LBE50:
+ 728               	.LBE49:
+ 168:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     }
+ 169:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }
+ 730               	.LM78:
+ 731 021c 0895      		ret
+ 736               	.Lscope13:
+ 741               	.global	_Z13lcdDrawStringhhPKc
+ 743               	_Z13lcdDrawStringhhPKc:
+ 170:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 171:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** 
+ 172:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** void lcdDrawString(uint8_t x, uint8_t y, const char* text) {
+ 745               	.LM79:
+ 746               	.LFBB14:
+ 747 021e FF92      		push r15
+ 748 0220 0F93      		push r16
+ 749 0222 1F93      		push r17
+ 750 0224 CF93      		push r28
+ 751 0226 DF93      		push r29
+ 752               	/* prologue: function */
+ 753               	/* frame size = 0 */
+ 754               	/* stack size = 5 */
+ 755               	.L__stack_usage = 5
+ 756 0228 F62E      		mov r15,r22
+ 757 022a EA01      		movw r28,r20
+ 758               	.LBB51:
+ 173:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     
+ 174:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (uint8_t i = 0; i < strlen(text); ++i) {
+ 760               	.LM80:
+ 761 022c 082F      		mov r16,r24
+ 762 022e 10E0      		ldi r17,0
+ 763               	.L27:
+ 765               	.LM81:
+ 766 0230 212F      		mov r18,r17
+ 767 0232 30E0      		ldi r19,0
+ 768 0234 FE01      		movw r30,r28
+ 769               		0:
+ 770 0236 0190      		ld __tmp_reg__,Z+
+ 771 0238 0020      		tst __tmp_reg__
+ 772 023a 01F4      		brne 0b
+ 773 023c 3197      		sbiw r30,1
+ 774 023e EC1B      		sub r30,r28
+ 775 0240 FD0B      		sbc r31,r29
+ 776 0242 2E17      		cp r18,r30
+ 777 0244 3F07      		cpc r19,r31
+ 778 0246 00F4      		brsh .L29
+ 175:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         
+ 176:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****         lcdDrawChar(x + i * 5, y, text[i]);
+ 780               	.LM82:
+ 781 0248 FE01      		movw r30,r28
+ 782 024a E20F      		add r30,r18
+ 783 024c F31F      		adc r31,r19
+ 784 024e 4081      		ld r20,Z
+ 785 0250 6F2D      		mov r22,r15
+ 786 0252 802F      		mov r24,r16
+ 787 0254 0E94 0000 		call _Z11lcdDrawCharhhh
+ 174:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     for (uint8_t i = 0; i < strlen(text); ++i) {
+ 789               	.LM83:
+ 790 0258 1F5F      		subi r17,lo8(-(1))
+ 791 025a 0B5F      		subi r16,lo8(-(5))
+ 792 025c 00C0      		rjmp .L27
+ 793               	.L29:
+ 794               	/* epilogue start */
+ 795               	.LBE51:
+ 177:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     }
+ 178:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp **** }...
+ 797               	.LM84:
+ 798 025e DF91      		pop r29
+ 799 0260 CF91      		pop r28
+ 800 0262 1F91      		pop r17
+ 801 0264 0F91      		pop r16
+ 802 0266 FF90      		pop r15
+ 803 0268 0895      		ret
+ 808               	.Lscope14:
+ 809               		.section	.rodata.str1.1,"aMS",@progbits,1
+ 810               	.LC0:
+ 811 0000 4275 7474 		.string	"Button Test"
+ 811      6F6E 2054 
+ 811      6573 7400 
+ 812               	.LC1:
+ 813 000c 3000      		.string	"0"
+ 814               	.LC2:
+ 815 000e 3100      		.string	"1"
+ 816               		.section	.text.startup,"ax",@progbits
+ 818               	.global	main
+ 820               	main:
+ 822               	.Ltext10:
+   1:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include <stdio.h>
+   2:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include <avr/io.h>
+   3:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include <avr/interrupt.h>
+   4:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include <util/delay.h>
+   5:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include "include/ioConfig.h"
+   6:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include "libs/st7565/include/st7565.h"
+   7:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include "libs/st7565/st7565.cpp" //???
+   8:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** #include "libs/st7565/include/fonts.h"
+   9:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** 
+  10:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** 
+  11:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp **** int main() {
+ 824               	.LM85:
+ 825               	.LFBB15:
+ 826               	/* prologue: function */
+ 827               	/* frame size = 0 */
+ 828               	/* stack size = 0 */
+ 829               	.L__stack_usage = 0
+  12:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     
+  13:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdInit();
+ 831               	.LM86:
+ 832 0000 0E94 0000 		call _Z7lcdInitv
+  14:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdClearBuffer();
+ 834               	.LM87:
+ 835 0004 0E94 0000 		call _Z14lcdClearBufferv
+ 836               	.LBB52:
+ 837               	.LBB53:
+ 839               	.Ltext11:
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+ 841               	.LM88:
+ 842 0008 0E94 0000 		call _Z13lcdSendBufferv
+ 843               	.LBE53:
+ 844               	.LBE52:
+ 846               	.Ltext12:
+  15:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdRefresh();
+  16:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdSetBrightness(20);
+ 848               	.LM89:
+ 849 000c 84E1      		ldi r24,lo8(20)
+ 850 000e 0E94 0000 		call _Z16lcdSetBrightnessh
+ 851 0012 8091 0000 		lds r24,font5x7
+ 852 0016 9091 0000 		lds r25,font5x7+1
+ 853 001a A091 0000 		lds r26,font5x7+2
+ 854 001e B091 0000 		lds r27,font5x7+3
+ 855               	.LBB54:
+ 856               	.LBB55:
+ 858               	.Ltext13:
+ 131:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     activeFont = font;
+ 860               	.LM90:
+ 861 0022 8093 0000 		sts activeFont,r24
+ 862 0026 9093 0000 		sts activeFont+1,r25
+ 863 002a A093 0000 		sts activeFont+2,r26
+ 864 002e B093 0000 		sts activeFont+3,r27
+ 865               	.LBE55:
+ 866               	.LBE54:
+ 868               	.Ltext14:
+  17:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdSetFont(font5x7);
+  18:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdDrawString(38, 20, "Button Test");
+ 870               	.LM91:
+ 871 0032 40E0      		ldi r20,lo8(.LC0)
+ 872 0034 50E0      		ldi r21,hi8(.LC0)
+ 873 0036 64E1      		ldi r22,lo8(20)
+ 874 0038 86E2      		ldi r24,lo8(38)
+ 875 003a 0E94 0000 		call _Z13lcdDrawStringhhPKc
+  19:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdDrawString(3, 55, "0");
+ 877               	.LM92:
+ 878 003e 40E0      		ldi r20,lo8(.LC1)
+ 879 0040 50E0      		ldi r21,hi8(.LC1)
+ 880 0042 67E3      		ldi r22,lo8(55)
+ 881 0044 83E0      		ldi r24,lo8(3)
+ 882 0046 0E94 0000 		call _Z13lcdDrawStringhhPKc
+  20:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdDrawString(42, 55, "0");
+ 884               	.LM93:
+ 885 004a 40E0      		ldi r20,lo8(.LC1)
+ 886 004c 50E0      		ldi r21,hi8(.LC1)
+ 887 004e 67E3      		ldi r22,lo8(55)
+ 888 0050 8AE2      		ldi r24,lo8(42)
+ 889 0052 0E94 0000 		call _Z13lcdDrawStringhhPKc
+  21:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdDrawString(82, 55, "0");
+ 891               	.LM94:
+ 892 0056 40E0      		ldi r20,lo8(.LC1)
+ 893 0058 50E0      		ldi r21,hi8(.LC1)
+ 894 005a 67E3      		ldi r22,lo8(55)
+ 895 005c 82E5      		ldi r24,lo8(82)
+ 896 005e 0E94 0000 		call _Z13lcdDrawStringhhPKc
+  22:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdDrawString(120, 55, "0");
+ 898               	.LM95:
+ 899 0062 40E0      		ldi r20,lo8(.LC1)
+ 900 0064 50E0      		ldi r21,hi8(.LC1)
+ 901 0066 67E3      		ldi r22,lo8(55)
+ 902 0068 88E7      		ldi r24,lo8(120)
+ 903 006a 0E94 0000 		call _Z13lcdDrawStringhhPKc
+ 904               	.LBB56:
+ 905               	.LBB57:
+ 907               	.Ltext15:
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+ 909               	.LM96:
+ 910 006e 0E94 0000 		call _Z13lcdSendBufferv
+ 911               	.LBE57:
+ 912               	.LBE56:
+ 914               	.Ltext16:
+  23:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     lcdRefresh();
+  24:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     
+  25:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     //Set buttons as inputs
+  26:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     button1_ddr = input;
+ 916               	.LM97:
+ 917 0072 2798      		cbi 0x4,7
+  27:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     button2_ddr = input;
+ 919               	.LM98:
+ 920 0074 2698      		cbi 0x4,6
+  28:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     button3_ddr = input;
+ 922               	.LM99:
+ 923 0076 2598      		cbi 0x4,5
+  29:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     button4_ddr = input;
+ 925               	.LM100:
+ 926 0078 2498      		cbi 0x4,4
+  30:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     
+  31:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     //Set led as output
+  32:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     led_ddr = output;
+ 928               	.LM101:
+ 929 007a 239A      		sbi 0x4,3
+  33:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     
+  34:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     //Enable internal pullups
+  35:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     PORTB = 0xFF;
+ 931               	.LM102:
+ 932 007c 8FEF      		ldi r24,lo8(-1)
+ 933 007e 85B9      		out 0x5,r24
+ 934               	.L52:
+  36:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     
+  37:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     //Turn off led
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     led = 0;
+ 936               	.LM103:
+ 937 0080 2B98      		cbi 0x5,3
+ 938               	.L31:
+  39:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     
+  40:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     //Check buttons
+  41:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****     while (1) {
+  42:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         
+  43:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         if (!button1) {
+ 940               	.LM104:
+ 941 0082 1F99      		sbic 0x3,7
+ 942 0084 00C0      		rjmp .L32
+  44:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  45:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(3, 55, "1");
+ 944               	.LM105:
+ 945 0086 40E0      		ldi r20,lo8(.LC2)
+ 946 0088 50E0      		ldi r21,hi8(.LC2)
+ 947 008a 00C0      		rjmp .L53
+ 948               	.L32:
+  46:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  47:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         } else {
+  48:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  49:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(3, 55, "0");
+ 950               	.LM106:
+ 951 008c 40E0      		ldi r20,lo8(.LC1)
+ 952 008e 50E0      		ldi r21,hi8(.LC1)
+ 953               	.L53:
+ 954 0090 67E3      		ldi r22,lo8(55)
+ 955 0092 83E0      		ldi r24,lo8(3)
+ 956 0094 0E94 0000 		call _Z13lcdDrawStringhhPKc
+ 957               	.LBB58:
+ 958               	.LBB59:
+ 960               	.Ltext17:
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+ 962               	.LM107:
+ 963 0098 0E94 0000 		call _Z13lcdSendBufferv
+ 964               	.LBE59:
+ 965               	.LBE58:
+ 967               	.Ltext18:
+  50:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  51:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         }
+  52:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         
+  53:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         if (!button2) {
+ 969               	.LM108:
+ 970 009c 1E99      		sbic 0x3,6
+ 971 009e 00C0      		rjmp .L34
+  54:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  55:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(42, 55, "1");
+ 973               	.LM109:
+ 974 00a0 40E0      		ldi r20,lo8(.LC2)
+ 975 00a2 50E0      		ldi r21,hi8(.LC2)
+ 976 00a4 00C0      		rjmp .L54
+ 977               	.L34:
+  56:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  57:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         } else {
+  58:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  59:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(42, 55, "0");
+ 979               	.LM110:
+ 980 00a6 40E0      		ldi r20,lo8(.LC1)
+ 981 00a8 50E0      		ldi r21,hi8(.LC1)
+ 982               	.L54:
+ 983 00aa 67E3      		ldi r22,lo8(55)
+ 984 00ac 8AE2      		ldi r24,lo8(42)
+ 985 00ae 0E94 0000 		call _Z13lcdDrawStringhhPKc
+ 986               	.LBB60:
+ 987               	.LBB61:
+ 989               	.Ltext19:
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+ 991               	.LM111:
+ 992 00b2 0E94 0000 		call _Z13lcdSendBufferv
+ 993               	.LBE61:
+ 994               	.LBE60:
+ 996               	.Ltext20:
+  60:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  61:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         }
+  62:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         
+  63:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         if (!button3) {
+ 998               	.LM112:
+ 999 00b6 1D99      		sbic 0x3,5
+ 1000 00b8 00C0      		rjmp .L36
+  64:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  65:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(82, 55, "1");
+ 1002               	.LM113:
+ 1003 00ba 40E0      		ldi r20,lo8(.LC2)
+ 1004 00bc 50E0      		ldi r21,hi8(.LC2)
+ 1005 00be 00C0      		rjmp .L55
+ 1006               	.L36:
+  66:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  67:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         } else {
+  68:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  69:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(82, 55, "0");
+ 1008               	.LM114:
+ 1009 00c0 40E0      		ldi r20,lo8(.LC1)
+ 1010 00c2 50E0      		ldi r21,hi8(.LC1)
+ 1011               	.L55:
+ 1012 00c4 67E3      		ldi r22,lo8(55)
+ 1013 00c6 82E5      		ldi r24,lo8(82)
+ 1014 00c8 0E94 0000 		call _Z13lcdDrawStringhhPKc
+ 1015               	.LBB62:
+ 1016               	.LBB63:
+ 1018               	.Ltext21:
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+ 1020               	.LM115:
+ 1021 00cc 0E94 0000 		call _Z13lcdSendBufferv
+ 1022               	.LBE63:
+ 1023               	.LBE62:
+ 1025               	.Ltext22:
+  70:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  71:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         }
+  72:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         
+  73:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         if (!button4) {
+ 1027               	.LM116:
+ 1028 00d0 1C99      		sbic 0x3,4
+ 1029 00d2 00C0      		rjmp .L38
+  74:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  75:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(120, 55, "1");
+ 1031               	.LM117:
+ 1032 00d4 40E0      		ldi r20,lo8(.LC2)
+ 1033 00d6 50E0      		ldi r21,hi8(.LC2)
+ 1034 00d8 00C0      		rjmp .L56
+ 1035               	.L38:
+  76:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  77:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         } else {
+  78:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  79:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdDrawString(120, 55, "0");
+ 1037               	.LM118:
+ 1038 00da 40E0      		ldi r20,lo8(.LC1)
+ 1039 00dc 50E0      		ldi r21,hi8(.LC1)
+ 1040               	.L56:
+ 1041 00de 67E3      		ldi r22,lo8(55)
+ 1042 00e0 88E7      		ldi r24,lo8(120)
+ 1043 00e2 0E94 0000 		call _Z13lcdDrawStringhhPKc
+ 1044               	.LBB64:
+ 1045               	.LBB65:
+ 1047               	.Ltext23:
+  38:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/libs/st7565/st7565.cpp ****     lcdSendBuffer();
+ 1049               	.LM119:
+ 1050 00e6 0E94 0000 		call _Z13lcdSendBufferv
+ 1051               	.LBE65:
+ 1052               	.LBE64:
+ 1054               	.Ltext24:
+  80:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             lcdRefresh();
+  81:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         }
+  82:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         
+  83:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****         if (!button1 || !button2 || !button3 || !button4) {
+ 1056               	.LM120:
+ 1057 00ea 1F9B      		sbis 0x3,7
+ 1058 00ec 00C0      		rjmp .L40
+ 1060               	.LM121:
+ 1061 00ee 1E9B      		sbis 0x3,6
+ 1062 00f0 00C0      		rjmp .L40
+ 1064               	.LM122:
+ 1065 00f2 1D9B      		sbis 0x3,5
+ 1066 00f4 00C0      		rjmp .L40
+ 1067 00f6 1C99      		sbic 0x3,4
+ 1068 00f8 00C0      		rjmp .L52
+ 1069               	.L40:
+  84:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             
+  85:/Users/Thomas/Documents/Privat/Projekte/XAVR/superquad/superquad/main.cpp ****             led = 1;
+ 1071               	.LM123:
+ 1072 00fa 2B9A      		sbi 0x5,3
+ 1073 00fc 00C0      		rjmp .L31
+ 1078               	.Lscope15:
+ 1079               	.global	activeFont
+ 1080               		.section .bss
+ 1083               	activeFont:
+ 1084 0000 0000 0000 		.zero	4
+ 1085               	.global	buffer
+ 1088               	buffer:
+ 1089 0004 0000 0000 		.zero	1024
+ 1089      0000 0000 
+ 1089      0000 0000 
+ 1089      0000 0000 
+ 1089      0000 0000 
+ 1090               	.global	font5x7
+ 1091               		.data
+ 1094               	font5x7:
+ 1095 0000 05        		.byte	5
+ 1096 0001 07        		.byte	7
+ 1097 0002 0000      		.word	chars5x7
+ 1098               	.global	chars5x7
+ 1101               	chars5x7:
+ 1102 0004 00        		.byte	0
+ 1103 0005 00        		.byte	0
+ 1104 0006 00        		.byte	0
+ 1105 0007 00        		.byte	0
+ 1106 0008 00        		.byte	0
+ 1107 0009 00        		.byte	0
+ 1108 000a 00        		.byte	0
+ 1109 000b FA        		.byte	-6
+ 1110 000c 00        		.byte	0
+ 1111 000d 00        		.byte	0
+ 1112 000e 00        		.byte	0
+ 1113 000f C0        		.byte	-64
+ 1114 0010 00        		.byte	0
+ 1115 0011 C0        		.byte	-64
+ 1116 0012 00        		.byte	0
+ 1117 0013 28        		.byte	40
+ 1118 0014 7C        		.byte	124
+ 1119 0015 28        		.byte	40
+ 1120 0016 7C        		.byte	124
+ 1121 0017 28        		.byte	40
+ 1122 0018 00        		.byte	0
+ 1123 0019 64        		.byte	100
+ 1124 001a D6        		.byte	-42
+ 1125 001b 4C        		.byte	76
+ 1126 001c 00        		.byte	0
+ 1127 001d 32        		.byte	50
+ 1128 001e 34        		.byte	52
+ 1129 001f 08        		.byte	8
+ 1130 0020 16        		.byte	22
+ 1131 0021 26        		.byte	38
+ 1132 0022 4C        		.byte	76
+ 1133 0023 B2        		.byte	-78
+ 1134 0024 B2        		.byte	-78
+ 1135 0025 4C        		.byte	76
+ 1136 0026 0A        		.byte	10
+ 1137 0027 00        		.byte	0
+ 1138 0028 00        		.byte	0
+ 1139 0029 C0        		.byte	-64
+ 1140 002a 00        		.byte	0
+ 1141 002b 00        		.byte	0
+ 1142 002c 00        		.byte	0
+ 1143 002d 7C        		.byte	124
+ 1144 002e 82        		.byte	-126
+ 1145 002f 00        		.byte	0
+ 1146 0030 00        		.byte	0
+ 1147 0031 00        		.byte	0
+ 1148 0032 00        		.byte	0
+ 1149 0033 82        		.byte	-126
+ 1150 0034 7C        		.byte	124
+ 1151 0035 00        		.byte	0
+ 1152 0036 00        		.byte	0
+ 1153 0037 20        		.byte	32
+ 1154 0038 70        		.byte	112
+ 1155 0039 20        		.byte	32
+ 1156 003a 00        		.byte	0
+ 1157 003b 10        		.byte	16
+ 1158 003c 10        		.byte	16
+ 1159 003d 7C        		.byte	124
+ 1160 003e 10        		.byte	16
+ 1161 003f 10        		.byte	16
+ 1162 0040 00        		.byte	0
+ 1163 0041 02        		.byte	2
+ 1164 0042 04        		.byte	4
+ 1165 0043 00        		.byte	0
+ 1166 0044 00        		.byte	0
+ 1167 0045 10        		.byte	16
+ 1168 0046 10        		.byte	16
+ 1169 0047 10        		.byte	16
+ 1170 0048 10        		.byte	16
+ 1171 0049 10        		.byte	16
+ 1172 004a 00        		.byte	0
+ 1173 004b 06        		.byte	6
+ 1174 004c 06        		.byte	6
+ 1175 004d 00        		.byte	0
+ 1176 004e 00        		.byte	0
+ 1177 004f 02        		.byte	2
+ 1178 0050 0C        		.byte	12
+ 1179 0051 10        		.byte	16
+ 1180 0052 60        		.byte	96
+ 1181 0053 80        		.byte	-128
+ 1182 0054 00        		.byte	0
+ 1183 0055 7C        		.byte	124
+ 1184 0056 82        		.byte	-126
+ 1185 0057 7C        		.byte	124
+ 1186 0058 00        		.byte	0
+ 1187 0059 00        		.byte	0
+ 1188 005a 80        		.byte	-128
+ 1189 005b FE        		.byte	-2
+ 1190 005c 00        		.byte	0
+ 1191 005d 00        		.byte	0
+ 1192 005e 00        		.byte	0
+ 1193 005f 46        		.byte	70
+ 1194 0060 9A        		.byte	-102
+ 1195 0061 62        		.byte	98
+ 1196 0062 00        		.byte	0
+ 1197 0063 00        		.byte	0
+ 1198 0064 44        		.byte	68
+ 1199 0065 92        		.byte	-110
+ 1200 0066 6C        		.byte	108
+ 1201 0067 00        		.byte	0
+ 1202 0068 00        		.byte	0
+ 1203 0069 3C        		.byte	60
+ 1204 006a 44        		.byte	68
+ 1205 006b FE        		.byte	-2
+ 1206 006c 04        		.byte	4
+ 1207 006d 00        		.byte	0
+ 1208 006e F4        		.byte	-12
+ 1209 006f 92        		.byte	-110
+ 1210 0070 8C        		.byte	-116
+ 1211 0071 00        		.byte	0
+ 1212 0072 00        		.byte	0
+ 1213 0073 7C        		.byte	124
+ 1214 0074 92        		.byte	-110
+ 1215 0075 5C        		.byte	92
+ 1216 0076 00        		.byte	0
+ 1217 0077 00        		.byte	0
+ 1218 0078 80        		.byte	-128
+ 1219 0079 9E        		.byte	-98
+ 1220 007a E0        		.byte	-32
+ 1221 007b 00        		.byte	0
+ 1222 007c 00        		.byte	0
+ 1223 007d 6C        		.byte	108
+ 1224 007e 92        		.byte	-110
+ 1225 007f 6C        		.byte	108
+ 1226 0080 00        		.byte	0
+ 1227 0081 00        		.byte	0
+ 1228 0082 74        		.byte	116
+ 1229 0083 92        		.byte	-110
+ 1230 0084 7C        		.byte	124
+ 1231 0085 00        		.byte	0
+ 1232 0086 00        		.byte	0
+ 1233 0087 66        		.byte	102
+ 1234 0088 66        		.byte	102
+ 1235 0089 00        		.byte	0
+ 1236 008a 00        		.byte	0
+ 1237 008b 00        		.byte	0
+ 1238 008c 62        		.byte	98
+ 1239 008d 64        		.byte	100
+ 1240 008e 00        		.byte	0
+ 1241 008f 00        		.byte	0
+ 1242 0090 10        		.byte	16
+ 1243 0091 28        		.byte	40
+ 1244 0092 44        		.byte	68
+ 1245 0093 00        		.byte	0
+ 1246 0094 00        		.byte	0
+ 1247 0095 28        		.byte	40
+ 1248 0096 28        		.byte	40
+ 1249 0097 28        		.byte	40
+ 1250 0098 28        		.byte	40
+ 1251 0099 28        		.byte	40
+ 1252 009a 00        		.byte	0
+ 1253 009b 00        		.byte	0
+ 1254 009c 44        		.byte	68
+ 1255 009d 28        		.byte	40
+ 1256 009e 10        		.byte	16
+ 1257 009f 00        		.byte	0
+ 1258 00a0 40        		.byte	64
+ 1259 00a1 9A        		.byte	-102
+ 1260 00a2 60        		.byte	96
+ 1261 00a3 00        		.byte	0
+ 1262 00a4 3C        		.byte	60
+ 1263 00a5 52        		.byte	82
+ 1264 00a6 AA        		.byte	-86
+ 1265 00a7 7A        		.byte	122
+ 1266 00a8 04        		.byte	4
+ 1267 00a9 00        		.byte	0
+ 1268 00aa 7E        		.byte	126
+ 1269 00ab 88        		.byte	-120
+ 1270 00ac 7E        		.byte	126
+ 1271 00ad 00        		.byte	0
+ 1272 00ae 00        		.byte	0
+ 1273 00af FE        		.byte	-2
+ 1274 00b0 92        		.byte	-110
+ 1275 00b1 6C        		.byte	108
+ 1276 00b2 00        		.byte	0
+ 1277 00b3 00        		.byte	0
+ 1278 00b4 7C        		.byte	124
+ 1279 00b5 82        		.byte	-126
+ 1280 00b6 44        		.byte	68
+ 1281 00b7 00        		.byte	0
+ 1282 00b8 00        		.byte	0
+ 1283 00b9 FE        		.byte	-2
+ 1284 00ba 82        		.byte	-126
+ 1285 00bb 7C        		.byte	124
+ 1286 00bc 00        		.byte	0
+ 1287 00bd 00        		.byte	0
+ 1288 00be FE        		.byte	-2
+ 1289 00bf 92        		.byte	-110
+ 1290 00c0 82        		.byte	-126
+ 1291 00c1 00        		.byte	0
+ 1292 00c2 00        		.byte	0
+ 1293 00c3 FE        		.byte	-2
+ 1294 00c4 90        		.byte	-112
+ 1295 00c5 80        		.byte	-128
+ 1296 00c6 00        		.byte	0
+ 1297 00c7 7C        		.byte	124
+ 1298 00c8 82        		.byte	-126
+ 1299 00c9 92        		.byte	-110
+ 1300 00ca 5C        		.byte	92
+ 1301 00cb 00        		.byte	0
+ 1302 00cc 00        		.byte	0
+ 1303 00cd FE        		.byte	-2
+ 1304 00ce 10        		.byte	16
+ 1305 00cf FE        		.byte	-2
+ 1306 00d0 00        		.byte	0
+ 1307 00d1 00        		.byte	0
+ 1308 00d2 00        		.byte	0
+ 1309 00d3 FE        		.byte	-2
+ 1310 00d4 00        		.byte	0
+ 1311 00d5 00        		.byte	0
+ 1312 00d6 00        		.byte	0
+ 1313 00d7 04        		.byte	4
+ 1314 00d8 02        		.byte	2
+ 1315 00d9 FC        		.byte	-4
+ 1316 00da 00        		.byte	0
+ 1317 00db 00        		.byte	0
+ 1318 00dc FE        		.byte	-2
+ 1319 00dd 10        		.byte	16
+ 1320 00de EE        		.byte	-18
+ 1321 00df 00        		.byte	0
+ 1322 00e0 00        		.byte	0
+ 1323 00e1 FE        		.byte	-2
+ 1324 00e2 02        		.byte	2
+ 1325 00e3 02        		.byte	2
+ 1326 00e4 00        		.byte	0
+ 1327 00e5 FE        		.byte	-2
+ 1328 00e6 70        		.byte	112
+ 1329 00e7 0E        		.byte	14
+ 1330 00e8 70        		.byte	112
+ 1331 00e9 FE        		.byte	-2
+ 1332 00ea FE        		.byte	-2
+ 1333 00eb 70        		.byte	112
+ 1334 00ec 0C        		.byte	12
+ 1335 00ed FE        		.byte	-2
+ 1336 00ee 00        		.byte	0
+ 1337 00ef 7C        		.byte	124
+ 1338 00f0 82        		.byte	-126
+ 1339 00f1 82        		.byte	-126
+ 1340 00f2 7C        		.byte	124
+ 1341 00f3 00        		.byte	0
+ 1342 00f4 00        		.byte	0
+ 1343 00f5 FE        		.byte	-2
+ 1344 00f6 90        		.byte	-112
+ 1345 00f7 60        		.byte	96
+ 1346 00f8 00        		.byte	0
+ 1347 00f9 7C        		.byte	124
+ 1348 00fa 82        		.byte	-126
+ 1349 00fb 86        		.byte	-122
+ 1350 00fc 7A        		.byte	122
+ 1351 00fd 00        		.byte	0
+ 1352 00fe 00        		.byte	0
+ 1353 00ff FE        		.byte	-2
+ 1354 0100 90        		.byte	-112
+ 1355 0101 6E        		.byte	110
+ 1356 0102 00        		.byte	0
+ 1357 0103 00        		.byte	0
+ 1358 0104 64        		.byte	100
+ 1359 0105 92        		.byte	-110
+ 1360 0106 4C        		.byte	76
+ 1361 0107 00        		.byte	0
+ 1362 0108 00        		.byte	0
+ 1363 0109 80        		.byte	-128
+ 1364 010a FE        		.byte	-2
+ 1365 010b 80        		.byte	-128
+ 1366 010c 00        		.byte	0
+ 1367 010d 00        		.byte	0
+ 1368 010e FC        		.byte	-4
+ 1369 010f 02        		.byte	2
+ 1370 0110 FC        		.byte	-4
+ 1371 0111 00        		.byte	0
+ 1372 0112 00        		.byte	0
+ 1373 0113 F8        		.byte	-8
+ 1374 0114 06        		.byte	6
+ 1375 0115 F8        		.byte	-8
+ 1376 0116 00        		.byte	0
+ 1377 0117 FC        		.byte	-4
+ 1378 0118 02        		.byte	2
+ 1379 0119 FE        		.byte	-2
+ 1380 011a 02        		.byte	2
+ 1381 011b FC        		.byte	-4
+ 1382 011c 00        		.byte	0
+ 1383 011d EE        		.byte	-18
+ 1384 011e 10        		.byte	16
+ 1385 011f EE        		.byte	-18
+ 1386 0120 00        		.byte	0
+ 1387 0121 00        		.byte	0
+ 1388 0122 E0        		.byte	-32
+ 1389 0123 1E        		.byte	30
+ 1390 0124 E0        		.byte	-32
+ 1391 0125 00        		.byte	0
+ 1392 0126 00        		.byte	0
+ 1393 0127 8E        		.byte	-114
+ 1394 0128 92        		.byte	-110
+ 1395 0129 E2        		.byte	-30
+ 1396 012a 00        		.byte	0
+ 1397 012b 00        		.byte	0
+ 1398 012c FE        		.byte	-2
+ 1399 012d 82        		.byte	-126
+ 1400 012e 00        		.byte	0
+ 1401 012f 00        		.byte	0
+ 1402 0130 80        		.byte	-128
+ 1403 0131 60        		.byte	96
+ 1404 0132 10        		.byte	16
+ 1405 0133 0C        		.byte	12
+ 1406 0134 02        		.byte	2
+ 1407 0135 00        		.byte	0
+ 1408 0136 00        		.byte	0
+ 1409 0137 82        		.byte	-126
+ 1410 0138 FE        		.byte	-2
+ 1411 0139 00        		.byte	0
+ 1412 013a 20        		.byte	32
+ 1413 013b 40        		.byte	64
+ 1414 013c 80        		.byte	-128
+ 1415 013d 40        		.byte	64
+ 1416 013e 20        		.byte	32
+ 1417 013f 02        		.byte	2
+ 1418 0140 02        		.byte	2
+ 1419 0141 02        		.byte	2
+ 1420 0142 02        		.byte	2
+ 1421 0143 02        		.byte	2
+ 1422 0144 00        		.byte	0
+ 1423 0145 80        		.byte	-128
+ 1424 0146 40        		.byte	64
+ 1425 0147 00        		.byte	0
+ 1426 0148 00        		.byte	0
+ 1427 0149 00        		.byte	0
+ 1428 014a 2C        		.byte	44
+ 1429 014b 52        		.byte	82
+ 1430 014c 3E        		.byte	62
+ 1431 014d 00        		.byte	0
+ 1432 014e 00        		.byte	0
+ 1433 014f FE        		.byte	-2
+ 1434 0150 22        		.byte	34
+ 1435 0151 1C        		.byte	28
+ 1436 0152 00        		.byte	0
+ 1437 0153 00        		.byte	0
+ 1438 0154 3C        		.byte	60
+ 1439 0155 42        		.byte	66
+ 1440 0156 24        		.byte	36
+ 1441 0157 00        		.byte	0
+ 1442 0158 00        		.byte	0
+ 1443 0159 1C        		.byte	28
+ 1444 015a 22        		.byte	34
+ 1445 015b FE        		.byte	-2
+ 1446 015c 00        		.byte	0
+ 1447 015d 00        		.byte	0
+ 1448 015e 3C        		.byte	60
+ 1449 015f 52        		.byte	82
+ 1450 0160 34        		.byte	52
+ 1451 0161 00        		.byte	0
+ 1452 0162 00        		.byte	0
+ 1453 0163 20        		.byte	32
+ 1454 0164 7E        		.byte	126
+ 1455 0165 A0        		.byte	-96
+ 1456 0166 00        		.byte	0
+ 1457 0167 00        		.byte	0
+ 1458 0168 34        		.byte	52
+ 1459 0169 4A        		.byte	74
+ 1460 016a 3C        		.byte	60
+ 1461 016b 00        		.byte	0
+ 1462 016c 00        		.byte	0
+ 1463 016d FE        		.byte	-2
+ 1464 016e 20        		.byte	32
+ 1465 016f 1E        		.byte	30
+ 1466 0170 00        		.byte	0
+ 1467 0171 00        		.byte	0
+ 1468 0172 00        		.byte	0
+ 1469 0173 BE        		.byte	-66
+ 1470 0174 00        		.byte	0
+ 1471 0175 00        		.byte	0
+ 1472 0176 00        		.byte	0
+ 1473 0177 04        		.byte	4
+ 1474 0178 02        		.byte	2
+ 1475 0179 BC        		.byte	-68
+ 1476 017a 00        		.byte	0
+ 1477 017b 00        		.byte	0
+ 1478 017c FE        		.byte	-2
+ 1479 017d 08        		.byte	8
+ 1480 017e 36        		.byte	54
+ 1481 017f 00        		.byte	0
+ 1482 0180 00        		.byte	0
+ 1483 0181 00        		.byte	0
+ 1484 0182 FE        		.byte	-2
+ 1485 0183 00        		.byte	0
+ 1486 0184 00        		.byte	0
+ 1487 0185 7E        		.byte	126
+ 1488 0186 40        		.byte	64
+ 1489 0187 3E        		.byte	62
+ 1490 0188 40        		.byte	64
+ 1491 0189 3E        		.byte	62
+ 1492 018a 00        		.byte	0
+ 1493 018b 7E        		.byte	126
+ 1494 018c 40        		.byte	64
+ 1495 018d 3E        		.byte	62
+ 1496 018e 00        		.byte	0
+ 1497 018f 00        		.byte	0
+ 1498 0190 3C        		.byte	60
+ 1499 0191 42        		.byte	66
+ 1500 0192 3C        		.byte	60
+ 1501 0193 00        		.byte	0
+ 1502 0194 00        		.byte	0
+ 1503 0195 7E        		.byte	126
+ 1504 0196 48        		.byte	72
+ 1505 0197 38        		.byte	56
+ 1506 0198 00        		.byte	0
+ 1507 0199 00        		.byte	0
+ 1508 019a 38        		.byte	56
+ 1509 019b 48        		.byte	72
+ 1510 019c 7E        		.byte	126
+ 1511 019d 00        		.byte	0
+ 1512 019e 00        		.byte	0
+ 1513 019f 7E        		.byte	126
+ 1514 01a0 20        		.byte	32
+ 1515 01a1 40        		.byte	64
+ 1516 01a2 00        		.byte	0
+ 1517 01a3 00        		.byte	0
+ 1518 01a4 24        		.byte	36
+ 1519 01a5 52        		.byte	82
+ 1520 01a6 2C        		.byte	44
+ 1521 01a7 00        		.byte	0
+ 1522 01a8 20        		.byte	32
+ 1523 01a9 7C        		.byte	124
+ 1524 01aa 22        		.byte	34
+ 1525 01ab 04        		.byte	4
+ 1526 01ac 00        		.byte	0
+ 1527 01ad 00        		.byte	0
+ 1528 01ae 7C        		.byte	124
+ 1529 01af 02        		.byte	2
+ 1530 01b0 7E        		.byte	126
+ 1531 01b1 00        		.byte	0
+ 1532 01b2 00        		.byte	0
+ 1533 01b3 7C        		.byte	124
+ 1534 01b4 02        		.byte	2
+ 1535 01b5 7C        		.byte	124
+ 1536 01b6 00        		.byte	0
+ 1537 01b7 7C        		.byte	124
+ 1538 01b8 02        		.byte	2
+ 1539 01b9 7C        		.byte	124
+ 1540 01ba 02        		.byte	2
+ 1541 01bb 7C        		.byte	124
+ 1542 01bc 00        		.byte	0
+ 1543 01bd 76        		.byte	118
+ 1544 01be 08        		.byte	8
+ 1545 01bf 76        		.byte	118
+ 1546 01c0 00        		.byte	0
+ 1547 01c1 00        		.byte	0
+ 1548 01c2 60        		.byte	96
+ 1549 01c3 12        		.byte	18
+ 1550 01c4 7C        		.byte	124
+ 1551 01c5 00        		.byte	0
+ 1552 01c6 00        		.byte	0
+ 1553 01c7 4E        		.byte	78
+ 1554 01c8 52        		.byte	82
+ 1555 01c9 62        		.byte	98
+ 1556 01ca 00        		.byte	0
+ 1557 01cb 00        		.byte	0
+ 1558 01cc 10        		.byte	16
+ 1559 01cd FE        		.byte	-2
+ 1560 01ce 82        		.byte	-126
+ 1561 01cf 00        		.byte	0
+ 1562 01d0 00        		.byte	0
+ 1563 01d1 00        		.byte	0
+ 1564 01d2 FE        		.byte	-2
+ 1565 01d3 00        		.byte	0
+ 1566 01d4 00        		.byte	0
+ 1567 01d5 00        		.byte	0
+ 1568 01d6 82        		.byte	-126
+ 1569 01d7 FE        		.byte	-2
+ 1570 01d8 10        		.byte	16
+ 1571 01d9 00        		.byte	0
+ 1572 01da 10        		.byte	16
+ 1573 01db 20        		.byte	32
+ 1574 01dc 18        		.byte	24
+ 1575 01dd 08        		.byte	8
+ 1576 01de 10        		.byte	16
+ 1581               		.text
+ 1583               	.Letext0:
+ 1584               		.ident	"GCC: (GNU) 4.8.1"
+ 1585               	.global __do_copy_data
+ 1586               	.global __do_clear_bss
+DEFINED SYMBOLS
+                            *ABS*:00000000 main.cpp
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:2      *ABS*:0000003e __SP_H__
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:3      *ABS*:0000003d __SP_L__
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:4      *ABS*:0000003f __SREG__
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:5      *ABS*:00000000 __tmp_reg__
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:6      *ABS*:00000001 __zero_reg__
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:117    .text:00000000 _Z14lcdClearBufferv
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:1088   .bss:00000004 buffer
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:146    .text:00000016 _Z16lcdHardwareResetv
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:189    .text:00000030 _Z11lcdSendByteh
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:244    .text:0000005a _Z14lcdSendCommandh
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:264    .text:00000060 _Z11lcdSendDatah
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:283    .text:00000066 _Z13lcdSendBufferv
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:364    .text:000000c2 _Z10lcdRefreshv
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:380    .text:000000c6 _Z7lcdInitv
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:521    .text:0000014a _Z16lcdSetBrightnessh
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:552    .text:0000015e _Z10lcdSetFont4Font
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:1083   .bss:00000000 activeFont
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:574    .text:00000170 _Z12lcdDrawPixelhh
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:627    .text:000001aa _Z13lcdDrawColumnhh
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:665    .text:000001c8 _Z11lcdDrawCharhhh
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:743    .text:0000021e _Z13lcdDrawStringhhPKc
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:820    .text.startup:00000000 main
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:1094   .data:00000000 font5x7
+/var/folders/h9/mk2x02c91k39g81kb3tqd0d00000gn/T//ccutoZlu.s:1101   .data:00000004 chars5x7
+
+UNDEFINED SYMBOLS
+__do_copy_data
+__do_clear_bss

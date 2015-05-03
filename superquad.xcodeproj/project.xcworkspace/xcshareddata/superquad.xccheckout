@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4A2DA891-D432-4817-B47F-33848572D079</string>
+	<key>IDESourceControlProjectName</key>
+	<string>superquad</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>14C3E9EA115F91625F445EE31C8F1C1F4DF580A1</key>
+		<string>https://github.com/dithom/superquad</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>superquad.xcodeproj</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>14C3E9EA115F91625F445EE31C8F1C1F4DF580A1</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/dithom/superquad</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>14C3E9EA115F91625F445EE31C8F1C1F4DF580A1</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>14C3E9EA115F91625F445EE31C8F1C1F4DF580A1</string>
+			<key>IDESourceControlWCCName</key>
+			<string>superquad</string>
+		</dict>
+	</array>
+</dict>
+</plist>

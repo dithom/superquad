@@ -43,8 +43,8 @@
 		E9A977451AF67557005DAF80 /* superquad */ = {
 			isa = PBXGroup;
 			children = (
-				E9A977621AF676C1005DAF80 /* libs */,
 				E9A9775D1AF675F8005DAF80 /* include */,
+				E9A977621AF676C1005DAF80 /* libs */,
 				E9A977481AF67557005DAF80 /* Makefiles */,
 				E9A977461AF67557005DAF80 /* main.cpp */,
 			);
@@ -399,6 +399,7 @@
 				E9A9774F1AF67557005DAF80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9A977501AF67557005DAF80 /* Build configuration list for PBXLegacyTarget "Build" */ = {
 			isa = XCConfigurationList;
@@ -407,6 +408,7 @@
 				E9A977521AF67557005DAF80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9A977531AF67557005DAF80 /* Build configuration list for PBXLegacyTarget "Upload" */ = {
 			isa = XCConfigurationList;
@@ -415,6 +417,7 @@
 				E9A977551AF67557005DAF80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9A977561AF67557005DAF80 /* Build configuration list for PBXLegacyTarget "Clean" */ = {
 			isa = XCConfigurationList;
@@ -423,6 +426,7 @@
 				E9A977581AF67557005DAF80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E9A977591AF67557005DAF80 /* Build configuration list for PBXNativeTarget "Index" */ = {
 			isa = XCConfigurationList;
@@ -431,6 +435,7 @@
 				E9A9775B1AF67557005DAF80 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

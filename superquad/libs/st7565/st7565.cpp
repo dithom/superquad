@@ -8,7 +8,7 @@ uint8_t buffer[bufferSize];
 Font activeFont;
 
 
-void lcdSendBuffer(uint8_t *buffer) {
+void lcdSendBuffer() {
     
     //Iterate through pages
     for (uint8_t page = 0; page < 8; ++page) {
@@ -35,7 +35,7 @@ void lcdClearBuffer() {
 
 void lcdRefresh() {
     
-    lcdSendBuffer(buffer);
+    lcdSendBuffer();
 }
 
 
@@ -156,7 +156,23 @@ void lcdDrawColumn(uint8_t page, uint8_t column) {
 }
 
 
-void lcdDrawChar(uint8_t character) {
+void lcdDrawChar(uint8_t x, uint8_t y, uint8_t character) {
     
+    //Offset from ASCI table to byte array
+    uint16_t startPos = (character - 32) * activeFont.width;
     
+    //Write character to buffer
+    for (uint8_t i = 0; i < activeFont.width; ++i) {
+        
+        buffer[i + x + (y / 8) * 128] = activeFont.fontTable[startPos + i];
+    }
+}
+
+
+void lcdDrawString(uint8_t x, uint8_t y, const char* text) {
+    
+    for (uint8_t i = 0; i < strlen(text); ++i) {
+        
+        lcdDrawChar(x + i * 5, y, text[i]);
+    }
 }

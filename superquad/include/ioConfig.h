@@ -20,4 +20,20 @@
 #define st7565_scl registerBit(PORTD, 4)
 #define st7565_sda registerBit(PORTD, 1)
 
+//Buttons
+#define button1_ddr registerBit(DDRB, 7)
+#define button2_ddr registerBit(DDRB, 6)
+#define button3_ddr registerBit(DDRB, 5)
+#define button4_ddr registerBit(DDRB, 4)
+
+#define button1 registerBit(PINB, 7)
+#define button2 registerBit(PINB, 6)
+#define button3 registerBit(PINB, 5)
+#define button4 registerBit(PINB, 4)
+
+//Red led
+#define led_ddr registerBit(DDRB, 3)
+
+#define led registerBit(PORTB, 3)
+
 #endif
